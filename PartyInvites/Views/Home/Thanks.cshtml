@@ -1,0 +1,52 @@
+﻿@model PartyInvites.Models.GuestResponse
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Podziękowanie</title>
+    <style>
+        body {
+            background-color: #0ff;
+        }
+    </style>
+</head>
+<body>
+    @{ 
+        try
+        {
+            WebMail.SmtpServer = "smtp.wp.pl";
+            WebMail.SmtpPort = 587;
+            WebMail.EnableSsl = true;
+            WebMail.UserName = "dpaczek";
+            WebMail.Password = "testowe";
+            WebMail.From = "rsvp@przyklad.pl";
+
+            WebMail.Send("gospodin@wp.pl", "Powiadomienie RSVP", Model.Name + ((Model.WillAttend ?? false) ? " " : "nie") + "przyjdzie");
+        }
+
+        catch (Exception) {
+        @: <b> Przepraszamy nie możemy wysłać wiadomosci: RSFP</b>
+        }
+    }
+    <div class="text-center">
+        <h1> Dziękuję, @Model.Name </h1>
+        <div class="lead">
+            @if (Model.WillAttend == true)
+            {
+                @: Cieszymy się na spotkanie, chłodzimy napoje!
+        }
+            else
+            {
+                @: Szkoda, że nie przyjdziesz, dziękujemy za wiadomość.
+        }
+        </div>
+    </div>
+</body>
+</html>
